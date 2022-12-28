@@ -4,41 +4,49 @@ from corps_name import CorpName
 from get_corpcode import Get_Corpcode
 from get_corpcode import Get_Key
 
-def Get_Codes(corps: list[str]) -> pd.DataFrame:
+def Get_Codes(corp: str, type: str, remove_duplicates: bool = True) -> str or pd.DataFrame:
     
-    try:
-        print("CORPCODE.json 파일 읽어오는 중...\n")
+    assert type == "corp_code" or "stock_code", "Check your code type"
 
+    try:
         with open("CORPCODE.json", 'r') as f:
             json_data = json.load(f)
     except FileNotFoundError:
-        print("CORPCODE.json 파일이 없습니다\n")
-        print("CORPCODE.json 다운받는 중...\n")
+        print("CORPCODE.json does not exist\n")
+        print("Downloading CORPCODE.json\n")
         
         API_key = Get_Key()
         Get_Corpcode(key=API_key)
 
-        print("CORPCODE.json 다운 완료\n")
+        print("Download completed\n")
 
-        print("CORPCODE.json 파일 읽어오는 중...\n")
+        print("Reading CORPCODE.json...\n")
         with open("CORPCODE.json", 'r') as f:
             json_data = json.load(f)
-    
-    print("CORPCODE.json 파일 읽기 완료\n")
 
-    corp_data = json_data['result']['list']
+    corp_data_all = json_data['result']['list']
 
-    df_corp = pd.DataFrame(corp_data)
+    df_corp = pd.DataFrame(corp_data_all)
+
+    df_corp = df_corp[df_corp['corp_name'] == corp]
+
+    # get a code with recent modify_date if corp_name is duplicated
+    if remove_duplicates == True:
+
+        df_corp.sort_values(by='modify_date', ascending=False, inplace=True)
+
+        df_corp.drop_duplicates(subset='corp_name', keep='first', inplace=True)
 
     df_corp.set_index(['corp_name'], drop=True, inplace=True)
+    
+    return df_corp.loc[corp, type]
 
-    return df_corp.loc[corps, :]
 
 if __name__ == "__main__":
-    corps = CorpName.sec_list
+    sec_corps = CorpName.sec_list
 
-    data = Get_Codes(corps)
-
-    print(data)
-
-    # 코드가 2개인 회사들 modify_date 최신으로 변경
+    for corp in sec_corps:
+        corp_code = Get_Codes(corp, "corp_code")
+        stock_code = Get_Codes(corp, "stock_code")
+        print(f"{corp} 기업코드 : {corp_code}")
+        print(f"{corp} 주식코드 : {stock_code}")
