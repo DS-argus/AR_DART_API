@@ -36,6 +36,8 @@ def Get_Corpcode(key):
 
     with open(json_file_name + ".json", 'w') as f:
         f.write(json_str) 
+  
+  return
 
 
 if __name__ == "__main__":
