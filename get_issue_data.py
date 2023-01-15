@@ -58,11 +58,11 @@ def Get_Doc_data(key: str, rcept_no: str):
     xml_file = zip_file.read(zip_file.namelist()[0])
     xml_str = xml_file.decode('utf-8')
 
-    dict_str = xmltodict.parse(xml_str)    
-    json_str = json.dumps(xmltodict.parse(xml_str), indent=4, ensure_ascii=False)
-    json_file_name = name.split(".")[0]
+    # dict_str = xmltodict.parse(xml_str)    
+    # json_str = json.dumps(xmltodict.parse(xml_str), indent=4, ensure_ascii=False)
+    # json_file_name = name.split(".")[0]
 
-    return 
+    return xml_str
 
 if __name__ == "__main__":
     API_key = Get_Key()

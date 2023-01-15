@@ -1,10 +1,14 @@
 import json
 import xmltodict
+import ssl
 
 from io import BytesIO
 from zipfile import ZipFile
 from urllib.request import urlopen
 from urllib.parse import urlencode
+
+
+ssl._create_default_https_context = ssl._create_unverified_context
 
 def Get_Key() -> str:
   loc = r"Key.json"
