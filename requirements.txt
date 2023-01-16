@@ -1,0 +1,10 @@
+appscript==1.2.2
+lxml==4.9.2
+numpy==1.24.1
+pandas==1.5.2
+psutil==5.9.4
+python-dateutil==2.8.2
+pytz==2022.7.1
+six==1.16.0
+xlwings==0.28.8
+xmltodict==0.13.0
